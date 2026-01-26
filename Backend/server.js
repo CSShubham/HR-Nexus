@@ -7,6 +7,8 @@ import candidateRoutes from "./routes/candidateRoutes.js";
 import employeeRoutes from "./routes/employeeRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import leaveRoutes from "./routes/leaveRoutes.js";
+import announcementRoutes from "./routes/announcementRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 dotenv.config();
 connectDB();
 
@@ -21,6 +23,8 @@ app.use("/api/candidates", candidateRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
+app.use("/api/announcements", announcementRoutes);
+app.use("/api/profile", profileRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
