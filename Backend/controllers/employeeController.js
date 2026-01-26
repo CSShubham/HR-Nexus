@@ -2,8 +2,8 @@ import Employee from "../models/Employee.js";
 import Candidate from "../models/Candidate.js";
 import generateEmployeeId from "../utils/generateEmployeeId.js";
 import Offboarding from "../models/offBoarding.js";
-// import Attendance from "../models/Attendance.js";
-// import Leave from "../models/Leave.js";
+import Attendance from "../models/Attendance.js";
+import Leave from "../models/Leave.js";
 // ====================
 // ONBOARD EMPLOYEE
 // ====================
@@ -63,52 +63,53 @@ export const getAllEmployees = async (req, res) => {
 // ====================
 // HR: EMPLOYEE WORKING STATUS (TODAY)
 // ====================
-// export const getEmployeesWithWorkingStatus = async (req, res) => {
-//   const today = new Date().toISOString().split("T")[0];
 
-//   // 1️⃣ All employees
-//   const employees = await Employee.find().select(
-//     "employeeId name department designation status"
-//   );
+export const getEmployeesWithWorkingStatus = async (req, res) => {
+  const today = new Date().toISOString().split("T")[0];
 
-//   // 2️⃣ Today's attendance
-//   const attendanceToday = await Attendance.find({ date: today });
+  // 1️⃣ All employees
+  const employees = await Employee.find().select(
+    "employeeId name department designation status"
+  );
 
-//   // 3️⃣ Approved leaves today
-//   const leavesToday = await Leave.find({
-//     status: "approved",
-//     fromDate: { $lte: new Date(today) },
-//     toDate: { $gte: new Date(today) },
-//   });
+  // 2️⃣ Today's attendance
+  const attendanceToday = await Attendance.find({ date: today });
 
-//   const attendanceMap = {};
-//   attendanceToday.forEach((a) => {
-//     attendanceMap[a.employeeId.toString()] = a;
-//   });
+  // 3️⃣ Approved leaves today
+  const leavesToday = await Leave.find({
+    status: "approved",
+    fromDate: { $lte: new Date(today) },
+    toDate: { $gte: new Date(today) },
+  });
 
-//   const leaveSet = new Set(
-//     leavesToday.map((l) => l.employeeId.toString())
-//   );
+  const attendanceMap = {};
+  attendanceToday.forEach((a) => {
+    attendanceMap[a.employeeId.toString()] = a;
+  });
 
-//   const result = employees.map((emp) => {
-//     let workingStatus = "Not Punched";
+  const leaveSet = new Set(
+    leavesToday.map((l) => l.employeeId.toString())
+  );
 
-//     if (leaveSet.has(emp._id.toString())) {
-//       workingStatus = "On Leave";
-//     } else if (attendanceMap[emp._id]) {
-//       workingStatus = attendanceMap[emp._id].punchOut
-//         ? "Punched Out"
-//         : "Punched In";
-//     }
+  const result = employees.map((emp) => {
+    let workingStatus = "Not Punched";
 
-//     return {
-//       ...emp.toObject(),
-//       workingStatus,
-//     };
-//   });
+    if (leaveSet.has(emp._id.toString())) {
+      workingStatus = "On Leave";
+    } else if (attendanceMap[emp._id]) {
+      workingStatus = attendanceMap[emp._id].punchOut
+        ? "Punched Out"
+        : "Punched In";
+    }
 
-//   res.json(result);
-// };
+    return {
+      ...emp.toObject(),
+      workingStatus,
+    };
+  });
+
+  res.json(result);
+};
 
 // ====================
 // HR INITIATES OFFBOARDING
