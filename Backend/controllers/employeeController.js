@@ -50,7 +50,7 @@ export const onboardEmployee = async (req, res) => {
 // ====================
 export const getAllEmployees = async (req, res) => {
   const employees = await Employee.find().select(
-    "employeeId name email department designation status role createdAt"
+    "employeeId name email department designation phone status role createdAt"
   );
 
   res.json({
@@ -69,7 +69,7 @@ export const getEmployeesWithWorkingStatus = async (req, res) => {
 
   // 1️⃣ All employees
   const employees = await Employee.find().select(
-    "employeeId name department designation status"
+    "employeeId name email department designation phone status role createdAt"
   );
 
   // 2️⃣ Today's attendance
