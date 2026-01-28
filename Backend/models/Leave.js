@@ -3,8 +3,20 @@ import mongoose from "mongoose";
 const leaveSchema = new mongoose.Schema(
   {
     employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
-    fromDate: Date,
-    toDate: Date,
+    leaveType: {
+      type: String,
+      enum: ["casual", "sick", "earned", "unpaid"],
+      required: true,
+    },
+    fromDate: {
+      type: Date,
+      required: true,
+    },
+
+    toDate: {
+      type: Date,
+      required: true,
+    },
     reason: String,
     status: {
       type: String,
@@ -13,7 +25,7 @@ const leaveSchema = new mongoose.Schema(
     },
     remarks: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Leave", leaveSchema);
