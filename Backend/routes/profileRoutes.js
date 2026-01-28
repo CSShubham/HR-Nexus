@@ -8,7 +8,7 @@ import { authorize } from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
-router.get("/me", protect, authorize("employee"), getMyProfile);
-router.put("/me", protect, authorize("employee"), updateMyProfile);
+router.get("/me", protect, authorize("employee", "hr"), getMyProfile);
+router.put("/me", protect, authorize("employee", "hr"), updateMyProfile);
 
 export default router;
