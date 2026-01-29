@@ -3,12 +3,13 @@ import bcrypt from "bcryptjs";
 
 const employeeSchema = new mongoose.Schema(
   {
-    employeeId: { type: String, unique: true },
+    employeeId: { type: String, unique: true , required: true},
     name: String,
     email: String,
     phone: String,
     department: String,
     designation: String,
+    address: { type: String },
     role: {
       type: String,
       enum: ["employee", "hr"],

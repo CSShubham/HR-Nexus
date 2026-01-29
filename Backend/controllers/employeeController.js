@@ -4,6 +4,8 @@ import generateEmployeeId from "../utils/generateEmployeeId.js";
 import Offboarding from "../models/offBoarding.js";
 import Attendance from "../models/Attendance.js";
 import Leave from "../models/Leave.js";
+import sendEmail from "../utils/sendEmail.js";
+import generateTempPassword from "../utils/generateTempPassword.js";
 // ====================
 // ONBOARD EMPLOYEE
 // ====================
@@ -20,7 +22,7 @@ export const onboardEmployee = async (req, res) => {
       return res.status(400).json({ message: "Candidate not approved yet" });
 
     const employeeId = await generateEmployeeId(Employee);
-    const tempPassword = "Welcome@123";
+    const tempPassword = generateTempPassword();
 
     const employee = await Employee.create({
       name: candidate.name,
@@ -34,6 +36,47 @@ export const onboardEmployee = async (req, res) => {
 
     candidate.status = "onboarded";
     await candidate.save();
+
+    // 📧 SEND EMAIL
+    await sendEmail({
+      to: employee.email,
+      subject: "Welcome to the Company 🎉",
+      html: `
+  <h2>Welcome ${employee.name}! 🎉</h2>
+
+  <p>
+    We are pleased to inform you that you have been successfully onboarded as an employee at <strong>HR Nexus</strong>.
+  </p>
+
+  <h3>Login Credentials</h3>
+  <p><strong>Employee ID:</strong> ${employee.employeeId}</p>
+  <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+
+  <p>
+    🔐 Please log in using the above credentials and change your password immediately after your first login.
+    Do not share your login details with anyone.
+  </p>
+
+  <p>
+    📍 <strong>Login URL:</strong><br/>
+    <a href="http://localhost:5173/login">http://localhost:5173/login</a>
+  </p>
+
+  <br/>
+
+  <p>
+    If you face any issues while logging in, feel free to contact the HR team.
+  </p>
+
+  <br/>
+
+  <p>
+    Regards,<br/>
+    <strong>HR Team</strong><br/>
+    HR Nexus
+  </p>
+`,
+    });
 
     res.status(201).json({
       message: "Employee onboarded successfully",
@@ -50,7 +93,7 @@ export const onboardEmployee = async (req, res) => {
 // ====================
 export const getAllEmployees = async (req, res) => {
   const employees = await Employee.find().select(
-    "employeeId name email department designation phone status role createdAt"
+    "employeeId name email department designation phone status role createdAt",
   );
 
   res.json({
@@ -58,7 +101,6 @@ export const getAllEmployees = async (req, res) => {
     employees,
   });
 };
-
 
 // ====================
 // HR: EMPLOYEE WORKING STATUS (TODAY)
@@ -69,7 +111,7 @@ export const getEmployeesWithWorkingStatus = async (req, res) => {
 
   // 1️⃣ All employees
   const employees = await Employee.find().select(
-    "employeeId name email department designation phone status role createdAt"
+    "employeeId name email department designation phone status role createdAt",
   );
 
   // 2️⃣ Today's attendance
@@ -87,9 +129,7 @@ export const getEmployeesWithWorkingStatus = async (req, res) => {
     attendanceMap[a.employeeId.toString()] = a;
   });
 
-  const leaveSet = new Set(
-    leavesToday.map((l) => l.employeeId.toString())
-  );
+  const leaveSet = new Set(leavesToday.map((l) => l.employeeId.toString()));
 
   const result = employees.map((emp) => {
     let workingStatus = "Not Punched";
