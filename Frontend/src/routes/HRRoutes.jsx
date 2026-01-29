@@ -6,12 +6,14 @@ import CandidatesPage from '../pages/hr/CandidatesPage';
 import AttendancePage from '../pages/hr/AttendancePage';
 import LeavesPage from '../pages/hr/LeavesPage';
 import AnnouncementsPage from '../pages/hr/AnnouncementsPage';
-
+import HRProfilePage from '../pages/hr/HRProfilePage';
+// import HRPProfilePage from '../pages/hr/HRProfilePage';
 const HRRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/hr/dashboard" replace />} />
       <Route path="/dashboard" element={<HRDashboard />} />
+      <Route path="/profile" element={<HRProfilePage />} />
       <Route path="/employees" element={<EmployeesPage />} />
       <Route path="/candidates" element={<CandidatesPage />} />
       <Route path="/attendance" element={<AttendancePage />} />
