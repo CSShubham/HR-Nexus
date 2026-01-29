@@ -4,12 +4,9 @@ import Employee from "../models/Employee.js";
 // GET MY PROFILE
 // ====================
 export const getMyProfile = async (req, res) => {
-  const employee = await Employee.findById(req.user.id).select(
-    "-password"
-  );
+  const employee = await Employee.findById(req.user.id).select("-password");
 
-  if (!employee)
-    return res.status(404).json({ message: "Employee not found" });
+  if (!employee) return res.status(404).json({ message: "Employee not found" });
 
   res.json(employee);
 };
@@ -22,16 +19,15 @@ export const updateMyProfile = async (req, res) => {
   const updates = {};
 
   allowedUpdates.forEach((field) => {
-    if (req.body[field]) {
+    if (req.body.hasOwnProperty(field)) {
       updates[field] = req.body[field];
     }
   });
 
-  const employee = await Employee.findByIdAndUpdate(
-    req.user.id,
-    updates,
-    { new: true, runValidators: true }
-  ).select("-password");
+  const employee = await Employee.findByIdAndUpdate(req.user.id, updates, {
+    new: true,
+    runValidators: true,
+  }).select("-password");
 
   res.json({
     message: "Profile updated successfully",
