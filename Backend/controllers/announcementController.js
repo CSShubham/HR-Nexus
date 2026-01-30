@@ -64,7 +64,7 @@ export const updateAnnouncement = async (req, res) => {
 export const getAnnouncements = async (req, res) => {
   const announcements = await Announcement.find()
     .sort({ createdAt: -1 })
-    .populate("createdBy", "name");
+    .populate("createdBy", "name department designation");
 
   res.json(announcements);
 };
