@@ -1,7 +1,7 @@
 import Employee from "../models/Employee.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-
+import offBoarding from "../models/offBoarding.js";
 // Generate JWT
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
@@ -70,11 +70,34 @@ export const loginEmployee = async (req, res) => {
     if (!employee)
       return res.status(404).json({ message: "Employee not found" });
 
+    // ❌ Fully offboarded → block
+    if (employee.status === "offboarded") {
+      return res.status(403).json({
+        message: "Your employment has ended. Access revoked.",
+      });
+    }
+
+    // ⚠️ Exiting → allow only till last working day
+    if (employee.status === "exiting") {
+      const offboarding = await offBoarding.findOne({
+        employeeId: employee._id,
+      });
+
+      if (offboarding && new Date() > new Date(offboarding.lastWorkingDay)) {
+        return res.status(403).json({
+          message: "Your last working day has passed. Access revoked.",
+        });
+      }
+    }
+    // Continue with password check
     const isMatch = await bcrypt.compare(password, employee.password);
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
-    if (employee.status === "offboarded")
-      return res.status(403).json({ message: "Access Revoked. Employee is offboarded" });
+
+    // if (employee.status === "offboarded")
+    //   return res
+    //     .status(403)
+    //     .json({ message: "Access Revoked. Employee is offboarded" });
 
     res.json({
       token: generateToken(employee),

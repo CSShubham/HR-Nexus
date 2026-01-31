@@ -93,7 +93,7 @@ export const onboardEmployee = async (req, res) => {
 // ====================
 export const getAllEmployees = async (req, res) => {
   const employees = await Employee.find().select(
-    "employeeId name email department designation phone status role createdAt",
+    "employeeId name email department designation address phone status role createdAt",
   );
 
   res.json({
@@ -149,6 +149,40 @@ export const getEmployeesWithWorkingStatus = async (req, res) => {
   });
 
   res.json(result);
+};
+
+// ====================
+// HR: UPDATE EMPLOYEE
+// ====================
+export const updateEmployee = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const allowedUpdates = ['name', 'email', 'phone', 'department', 'designation', 'address', 'status'];
+    
+    const updates = {};
+    allowedUpdates.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates[field] = req.body[field];
+      }
+    });
+
+    const employee = await Employee.findByIdAndUpdate(
+      employeeId,
+      updates,
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.json({
+      message: "Employee updated successfully",
+      employee,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // ====================
