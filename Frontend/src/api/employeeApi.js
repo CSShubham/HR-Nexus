@@ -6,5 +6,6 @@ export const employeeApi = {
   updateEmployee: (employeeId, data) => api.put(`/employees/${employeeId}`, data),
   onboardEmployee: (candidateId, data) => api.post(`/employees/onboard/${candidateId}`, data),
   offboardEmployee: (employeeId, data) => api.post(`/employees/offboard/${employeeId}`, data),
+  deleteEmployee: (employeeId) => api.delete(`/employees/${employeeId}`),
   getOffboardingInfo: () => api.get('/employees/offboarding/me'),
 };

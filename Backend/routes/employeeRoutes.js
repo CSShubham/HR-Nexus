@@ -5,7 +5,8 @@ import {
   getOffboardingInfo,
   getAllEmployees,
   updateEmployee,
-  getEmployeesWithWorkingStatus
+  getEmployeesWithWorkingStatus,
+  deleteEmployee
 } from "../controllers/employeeController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { authorize } from "../middlewares/roleMiddleware.js";
@@ -23,7 +24,7 @@ router.post(
   authorize("hr"),
   offboardEmployee,
 );
-
+router.delete("/:employeeId", protect, authorize("hr"), deleteEmployee);
 router.get(
   "/offboarding/me",
   protect,

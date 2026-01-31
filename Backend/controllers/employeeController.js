@@ -220,3 +220,38 @@ export const getOffboardingInfo = async (req, res) => {
 
   res.json(info);
 };
+
+// ====================
+// HR: DELETE OFFBOARDED EMPLOYEE
+// ====================
+export const deleteEmployee = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+
+    const employee = await Employee.findById(employeeId);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Only allow deletion of offboarded employees
+    if (employee.status !== "offboarded") {
+      return res.status(400).json({ 
+        message: "Only offboarded employees can be deleted" 
+      });
+    }
+
+    // Delete employee record
+    await Employee.findByIdAndDelete(employeeId);
+
+    // Delete related records (offboarding, attendance, leaves)
+    await Offboarding.deleteMany({ employeeId });
+    await Attendance.deleteMany({ employeeId });
+    await Leave.deleteMany({ employeeId });
+
+    res.json({
+      message: "Employee deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
