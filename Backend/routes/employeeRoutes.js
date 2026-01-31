@@ -4,6 +4,7 @@ import {
   offboardEmployee,
   getOffboardingInfo,
   getAllEmployees,
+  updateEmployee,
   getEmployeesWithWorkingStatus
 } from "../controllers/employeeController.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -15,7 +16,7 @@ const router = express.Router();
 router.get("/", protect, authorize("hr"), getAllEmployees);
 router.get("/working-status", protect, authorize("hr"), getEmployeesWithWorkingStatus);
 router.post("/onboard/:candidateId", protect, authorize("hr"), onboardEmployee);
-
+router.put("/:employeeId", protect, authorize("hr"), updateEmployee);
 router.post(
   "/offboard/:employeeId",
   protect,
