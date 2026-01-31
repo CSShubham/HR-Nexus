@@ -10,6 +10,8 @@ import leaveRoutes from "./routes/leaveRoutes.js";
 import announcementRoutes from "./routes/announcementRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import morgan from "morgan";
+import autoOffboardJobs from "./jobs/autoOffboardJobs.js";
+import autoOffBoard from "./utils/autoOffBoard.js";
 dotenv.config();
 connectDB();
 
@@ -36,7 +38,13 @@ app.use(
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+(async () => {
+  // Safety execution (runs if server was down earlier)
+  await autoOffBoard();
 
+  // Schedule future runs while server stays alive
+  autoOffboardJobs();
+})();
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/candidates", candidateRoutes);
