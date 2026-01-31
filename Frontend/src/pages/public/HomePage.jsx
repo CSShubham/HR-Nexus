@@ -82,7 +82,7 @@ const HomePage = () => {
               <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
                 <Building2 className="text-white" size={24} />
               </div>
-              <span className="text-xl font-bold text-gray-800">HR Nexus</span>
+              <span className="text-sm md:text-xl font-bold text-gray-800">HR Nexus</span>
             </div>
 
             {/* Navigation Links */}
@@ -99,7 +99,7 @@ const HomePage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center *:text-xs *:md:text-base gap-3">
               <Button
                 variant="outline"
                 icon={LogIn}
