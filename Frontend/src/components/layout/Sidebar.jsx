@@ -22,6 +22,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { role } = useAuth();
+  // console.log("User role in Sidebar:", role);
 
   const hrMenuItems = [
     { id: "dashboard", label: "Dashboard", icon: Home, path: "/hr/dashboard" },
@@ -128,7 +129,7 @@ const Sidebar = () => {
         } lg:translate-x-0 fixed lg:static inset-y-0 left-0 w-64 bg-gradient-to-b from-primary-700 to-primary-900 text-white transition-transform duration-300 ease-in-out z-40 flex flex-col`}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-primary-600">
+        <div className="p-6 pl-18 md:pl-6  border-b border-primary-600">
           <div className="flex items-center gap-3">
             <Building2 size={32} />
             <div>
@@ -162,7 +163,7 @@ const Sidebar = () => {
         <div className="p-4 border-t border-primary-600">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600 text-primary-100 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 bg-red-400 rounded-lg hover:bg-red-600 text-primary-100 transition-colors"
           >
             <LogOut size={20} />
             <span className="font-medium">Logout</span>

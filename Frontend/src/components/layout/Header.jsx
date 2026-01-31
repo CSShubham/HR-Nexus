@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Bell, Search } from "lucide-react";
-// import { useAuth } from '../../hooks/useAuth';
 import { useSelector ,useDispatch} from "react-redux";
 import { fetchMyProfile } from "../../features/profile/profileThunks";
 const Header = ({ title }) => {
@@ -17,7 +16,7 @@ const Header = ({ title }) => {
     <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
+          <h1 className="text-2xl pl-10 md:pl-0 font-bold text-gray-800">{title}</h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -38,7 +37,7 @@ const Header = ({ title }) => {
           </button> */}
 
           {/* User Avatar */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center cursor-pointer gap-3">
             <div className="text-right hidden sm:block">
               <p className="text-sm font-medium text-gray-800">
                 {user?.name || "User"}
