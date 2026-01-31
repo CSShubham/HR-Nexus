@@ -1,9 +1,9 @@
 import Employee from "../models/Employee.js";
 import Offboarding from "../models/offBoarding.js";
 
-const autoOffboard = async () => {
+const autoOffBoard = async () => {
   const today = new Date();
-
+  today.setHours(0, 0, 0, 0);
   const exits = await Offboarding.find({
     lastWorkingDay: { $lt: today },
   });
@@ -15,4 +15,4 @@ const autoOffboard = async () => {
   }
 };
 
-export default autoOffboard;
+export default autoOffBoard;
