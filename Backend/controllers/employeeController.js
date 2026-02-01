@@ -41,46 +41,48 @@ export const onboardEmployee = async (req, res) => {
     try {
       await sendEmail({
         to: employee.email,
-        subject: "Welcome to the Company 🎉",
+        subject: "Welcome to HR Nexus 🎉",
         html: `
-  <h2>Welcome ${employee.name}! 🎉</h2>
+      <h2>Welcome ${employee.name}! 🎉</h2>
 
-  <p>
-    We are pleased to inform you that you have been successfully onboarded as an employee at <strong>HR Nexus</strong>.
-  </p>
+      <p>
+        We are pleased to inform you that you have been successfully onboarded
+        as an employee at <strong>HR Nexus</strong>.
+      </p>
 
-  <h3>Login Credentials</h3>
-  <p><strong>Employee ID:</strong> ${employee.employeeId}</p>
-  <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+      <h3>Login Credentials</h3>
+      <p><strong>Employee ID:</strong> ${employee.employeeId}</p>
+      <p><strong>Temporary Password:</strong> ${tempPassword}</p>
 
-  <p>
-    🔐 Please log in using the above credentials and change your password immediately after your first login.
-    Do not share your login details with anyone.
-  </p>
+      <p>
+        🔐 Please log in using the above credentials and change your password
+        immediately after your first login.
+      </p>
 
-  <p>
-    📍 <strong>Login URL:</strong><br/>
-    <a href="https://hr-nexus-nu.vercel.app/login">https://hr-nexus-nu.vercel.app/login</a>
-  </p>
+      <p>
+        📍 <strong>Login URL:</strong><br/>
+        <a href="https://hr-nexus-nu.vercel.app/login">
+          https://hr-nexus-nu.vercel.app/login
+        </a>
+      </p>
 
-  <br/>
+      <br/>
 
-  <p>
-    If you face any issues while logging in, feel free to contact the HR team.
-  </p>
+      <p>
+        If you face any issues while logging in, feel free to contact the HR team.
+      </p>
 
-  <br/>
+      <br/>
 
-  <p>
-    Regards,<br/>
-    <strong>HR Team</strong><br/>
-    HR Nexus
-  </p>
-`,
+      <p>
+        Regards,<br/>
+        <strong>HR Team</strong><br/>
+        HR Nexus
+      </p>
+    `,
       });
     } catch (emailErr) {
-      // Log the actual Gmail error so you can debug it
-      console.error("⚠️ Email sending failed:", emailErr.message);
+      console.error("⚠️ Email sending failed:", emailErr);
     }
 
     res.status(201).json({
@@ -162,8 +164,16 @@ export const getEmployeesWithWorkingStatus = async (req, res) => {
 export const updateEmployee = async (req, res) => {
   try {
     const { employeeId } = req.params;
-    const allowedUpdates = ['name', 'email', 'phone', 'department', 'designation', 'address', 'status'];
-    
+    const allowedUpdates = [
+      "name",
+      "email",
+      "phone",
+      "department",
+      "designation",
+      "address",
+      "status",
+    ];
+
     const updates = {};
     allowedUpdates.forEach((field) => {
       if (req.body[field] !== undefined) {
@@ -171,11 +181,10 @@ export const updateEmployee = async (req, res) => {
       }
     });
 
-    const employee = await Employee.findByIdAndUpdate(
-      employeeId,
-      updates,
-      { new: true, runValidators: true }
-    ).select('-password');
+    const employee = await Employee.findByIdAndUpdate(employeeId, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
 
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
@@ -240,8 +249,8 @@ export const deleteEmployee = async (req, res) => {
 
     // Only allow deletion of offboarded employees
     if (employee.status !== "offboarded") {
-      return res.status(400).json({ 
-        message: "Only offboarded employees can be deleted" 
+      return res.status(400).json({
+        message: "Only offboarded employees can be deleted",
       });
     }
 
