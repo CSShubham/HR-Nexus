@@ -59,7 +59,7 @@ export const onboardEmployee = async (req, res) => {
 
   <p>
     📍 <strong>Login URL:</strong><br/>
-    <a href="http://localhost:5173/login">http://localhost:5173/login</a>
+    <a href="https://hr-nexus-nu.vercel.app/login">https://hr-nexus-nu.vercel.app/login</a>
   </p>
 
   <br/>
