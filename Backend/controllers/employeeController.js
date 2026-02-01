@@ -37,11 +37,12 @@ export const onboardEmployee = async (req, res) => {
     candidate.status = "onboarded";
     await candidate.save();
 
-    // 📧 SEND EMAIL
-    await sendEmail({
-      to: employee.email,
-      subject: "Welcome to the Company 🎉",
-      html: `
+    // 📧 SEND EMAIL — isolated so it doesn't crash onboarding
+    try {
+      await sendEmail({
+        to: employee.email,
+        subject: "Welcome to the Company 🎉",
+        html: `
   <h2>Welcome ${employee.name}! 🎉</h2>
 
   <p>
@@ -76,7 +77,11 @@ export const onboardEmployee = async (req, res) => {
     HR Nexus
   </p>
 `,
-    });
+      });
+    } catch (emailErr) {
+      // Log the actual Gmail error so you can debug it
+      console.error("⚠️ Email sending failed:", emailErr.message);
+    }
 
     res.status(201).json({
       message: "Employee onboarded successfully",
