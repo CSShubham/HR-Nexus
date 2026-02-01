@@ -12,6 +12,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 import morgan from "morgan";
 import autoOffboardJobs from "./jobs/autoOffboardJobs.js";
 import autoOffBoard from "./utils/autoOffBoard.js";
+import sendEmail from "./utils/sendEmail.js";
 dotenv.config();
 connectDB();
 
