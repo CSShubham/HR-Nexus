@@ -5,6 +5,7 @@ import { Mail, Lock, User, EyeOff, Eye } from "lucide-react";
 import { loginHR, loginEmployee } from "../../features/auth/authThunks";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const [isHR, setIsHR] = useState(true);
@@ -17,7 +18,7 @@ const LoginForm = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +42,7 @@ const LoginForm = () => {
         navigate("/employee/dashboard");
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login failed: ", error);
     }
   };
 
@@ -77,6 +78,11 @@ const LoginForm = () => {
 
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg p-2">
+            {error}
+          </div>
+        )}
         {isHR ? (
           <>
             <Input
