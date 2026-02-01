@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173", // Dev frontend
-   // Production frontend (later)
+   process.env.FRONTEND_URL,// Production frontend (later)
 ];
 app.use(
   cors({
@@ -38,6 +38,15 @@ app.use(
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    uptime: process.uptime(),
+    timestamp: new Date(),
+  });
+});
+
 (async () => {
   // Safety execution (runs if server was down earlier)
   await autoOffBoard();
