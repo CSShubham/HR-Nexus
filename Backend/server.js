@@ -47,6 +47,20 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.get("/test-email", async (req, res) => {
+  try {
+    await sendEmail({
+      to: "raj079097@gmail.com",
+      subject: "Resend Test Email",
+      html: "<h1>Resend is working ✅</h1>",
+    });
+    res.send("Email sent");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Email failed");
+  }
+});
+
 (async () => {
   // Safety execution (runs if server was down earlier)
   await autoOffBoard();
