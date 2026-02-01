@@ -1,7 +1,11 @@
+// import dotenv from "dotenv";
+// dotenv.config();
+
+
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import employeeRoutes from "./routes/employeeRoutes.js";
@@ -12,9 +16,10 @@ import profileRoutes from "./routes/profileRoutes.js";
 import morgan from "morgan";
 import autoOffboardJobs from "./jobs/autoOffboardJobs.js";
 import autoOffBoard from "./utils/autoOffBoard.js";
-import sendEmail from "./utils/sendEmail.js";
-dotenv.config();
+
+
 connectDB();
+
 
 const app = express();
 app.use(express.json());
@@ -48,20 +53,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.get("/test-email", async (req, res) => {
-  try {
-    await sendEmail({
-      to: "raj079097@gmail.com",
-      subject: "Resend Test Email",
-      html: "<h1>Resend is working ✅</h1>",
-    });
-    res.send("Email sent");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Email failed");
-  }
-});
-
 (async () => {
   // Safety execution (runs if server was down earlier)
   await autoOffBoard();
@@ -80,5 +71,5 @@ app.use("/api/profile", profileRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`🚀 HR Nexus backend running on port ${PORT}`)
+  console.log(`🚀 HR Nexus backend running on port ${PORT}`),
 );
